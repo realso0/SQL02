@@ -11,7 +11,7 @@ from employees;
 /*문제2.
 마지막으로 신입사원이 들어온 날은 언제 입니까? 다음 형식으로 출력해주세요.
 예) 2014년 07월 10일*/
-select to_char(min(hire_date),'YYYY"년" MM"월" DD"일"')
+select to_char(max(hire_date), 'YYYY"년" MM"월" DD"일"')
 from employees;
 select hire_date
 from employees;
@@ -19,33 +19,33 @@ from employees;
 /*문제3.
 부서별로 평균임금, 최고임금, 최저임금을 부서(department_id)와 함께 출력하고 정렬순서는
 평균연봉, 최고임금, 최저임금의 내림차순입니다.*/
-select department_name,
+select dep.department_name,
         avg(salary),
         max(salary),
         min(salary)
 from employees emp, departments dep
 where emp.department_id=dep.department_id(+)
-group by department_name
-order by department_name desc;
+group by dep.department_name
+order by avg(salary) desc, max(salary) desc, min(salary) desc;
 
 /*문제4.
 업무(job_id)별로 평균임금, 최고임금, 최저임금을 업무(job_id)와 함께 출력하고 정렬순서는 
 평균연봉, 최고임금, 최저임금의 내림차순입니다.*/
-select job_title,
+select jo.job_title,
         avg(salary),
         max(salary),
         min(salary)
 from employees emp, jobs jo
-where emp.job_id=jo.job_id
-group by job_title --select문에는 group by 에 참여한 컬럼이나 그룹함수만 올 수 있음
-order by job_title desc;
+where emp.job_id=jo.job_id(+)
+group by jo.job_title --select문에는 group by 에 참여한 컬럼이나 그룹함수만 올 수 있음
+order by avg(salary) desc, max(salary) desc, min(salary) desc;
 select job_id
 from employees; --null 존재여부 확인
 
 /*문제5.
 가장 오래 근속한 직원의 입사일은 언제인가요? 다음 형식으로 출력해주세요.
 예) 2014년 07월 10일*/
-select to_char(max(hire_date),'YYYY"년" MM"월" DD"일"')
+select to_char(min(hire_date), 'YYYY"년" MM"월" DD"일"')
 from employees;
 select hire_date
 from employees;
@@ -56,7 +56,7 @@ from employees;
 select department_name,
         avg(salary),
         min(salary),
-        (avg(salary)-min(salary))
+        avg(salary)-min(salary)
 from employees emp, departments dep
 where emp.department_id=dep.department_id(+)
 group by department_name
